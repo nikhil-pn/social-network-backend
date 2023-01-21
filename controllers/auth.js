@@ -36,12 +36,29 @@ exports.login = (req, res, next) => {
   })(req, res, next);
 };
 
-exports.logout = (req, res)=>{
-    req.logout(()=>{
-        console.log("User logged Out");
-    })
-    req.session.destroy((err)=>{
-        req.user = null
-        res.redirect("/")
-    })
-}
+exports.logout = (req, res) => {
+  req.logout(() => {
+    console.log("User logged Out");
+  });
+  req.session.destroy((err) => {
+    req.user = null;
+    res.redirect("/");
+  });
+};
+exports.signUp = (req, res, next) => {
+  //validation
+  req.body.email = validator.normalizeEmail(req.body.email, {
+    gmail_remove_dots: true,
+  });
+  const user = new User({
+    userName: req.body.userName,
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  user.save((err) => {
+    req.login(user, (err) => {
+      res.redirect("/profile");
+    });
+  });
+};
