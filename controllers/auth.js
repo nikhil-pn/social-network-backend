@@ -27,20 +27,21 @@ exports.login = (req, res, next) => {
       return res.redirect("/login");
     }
 
-
-    req.logIn(user, (err)=>{
-        if(err){
-            return next(err)
-        }
-        req.redirect(req.session.returnTo || "/profile")
-    })
-
-
-
-
-
-
-
-
-  });
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(req.session.returnTo || "/profile");
+    });
+  })(req, res, next);
 };
+
+exports.logout = (req, res)=>{
+    req.logout(()=>{
+        console.log("User logged Out");
+    })
+    req.session.destroy((err)=>{
+        req.user = null
+        res.redirect("/")
+    })
+}
