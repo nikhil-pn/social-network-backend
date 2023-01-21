@@ -25,9 +25,18 @@ module.exports = function (passport) {
           if (isMatch) {
             return done(null, user);
           }
-          return done(null, false, {msg: "Invalid Credentials"})
+          return done(null, false, { msg: "Invalid Credentials" });
         });
       });
     })
   );
+
+  //encrypt the user
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+  //decrypt the user
+  passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => done(err, user));
+  });
 };
