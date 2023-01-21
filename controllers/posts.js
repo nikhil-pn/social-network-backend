@@ -1,5 +1,5 @@
 const cloudinary = require("../middleware/cloudinary")
-
+const Post = require("../models/Post");
 module.exports = {
     createPost : async(req, res)=>{
         try {
@@ -11,6 +11,14 @@ module.exports = {
             })
         } catch (error) {
             console.log(error)
+        }
+    },
+    deletePost : async(req, res)=>{
+        try {
+            let post =  await Post.findById(req.params.id)
+            await cloudinary.uploader.destroy(post.cloudinaryId)
+        } catch (error) {
+            
         }
     }
 }
